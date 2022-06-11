@@ -1,0 +1,48 @@
+
+    <div class="footer">
+        <b> &#127279 2022 <a href="https://codingcow.de/"> codingcow.de </a> -
+            moo[at]codingcow.de </b>
+    </div>
+
+    
+
+    <script>      
+       /* <![CDATA[ */
+        document.addEventListener('DOMContentLoaded', function () {
+            var hash = window.location.hash;
+            window.location.hash = hash;
+            var message_box = document.getElementById("message-box");
+            var register_response = document.getElementById("register-response");
+            var unsubscribe_response = document.getElementById("unsubscribe-response");
+            var export_response = document.getElementById("export-response");
+            message_box.innerHTML = "" /* change to any text when needed*/
+
+            switch (hash) {
+                case "#register":
+                    register_response.innerHTML = "<p>Your registration was submitted. You will receive an email as soon as we get a result for your details. You may never hear from us.</p>";
+                    register_response.setAttribute("style", "height:fit-content");
+
+
+                    break;
+                case "#unsubscribe":
+                    unsubscribe_response.innerHTML = "<p>If you were registered, you are now unsubsribed.</p>";
+                    unsubscribe_response.setAttribute("style", "height:fit-content");
+
+                    break;
+                case "#download":
+                    console.log(hash)
+                    export_response.innerHTML = "<p>If you are registered, you will receive an email containing your data.</p>";
+                    export_response.setAttribute("style", "height:fit-content");
+
+                    break;
+            }
+            if (message_box.innerHTML != "") {
+                message_box.setAttribute("style", "height:fit-content");
+            }
+
+        }, true);
+    /* ]]> */
+    </script>
+</body>
+
+</html>

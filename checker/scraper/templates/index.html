@@ -1,0 +1,151 @@
+{% extends 'base.html' %}   
+{% block content %} 
+        <div id="message-box"></div>
+        <div class="info-box">
+            <h2>What this service does for you</h2>
+            <p>
+                We will check the Companies House for your name once every day. If you got appointed as director, or
+                our bot finds a related result, you will receive an email. Results are not logged and only
+                stored in memory.<br>
+                <br><b>Important:</b>
+                <br> Please, make sure to provide your full name, as we are checking for officer appointments by name.
+            </p>
+        </div>
+        <div class="form-box" id="register">
+            <form action="{%url 'scraper:subscribe' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="register" />
+                <h3 class="form-title">Subscribe for email notification</h3>
+                <table class="form-table">
+                    <tr>
+                        <th colspan="2">Name</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="name" class="input-field" id="register-form-name"
+                                placeholder="Johann Wolfgang von Goethe" required></td>
+
+                        <td>We need your name to search the register for it. </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Contact Email</th>
+                    </tr>
+                    <tr>
+                        <td><input type="email" name="email" class="input-field" placeholder="johnnythewolf@gmaul.com"
+                                required></td>
+                        <td>We need your email to contact you.</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Consent and submit</th>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" required>I understand and accept the <a href="#gdpr">Privacy
+                                policy</a></td>
+                        <td><input type="submit" value="Check me" /></td>
+                    </tr>
+                </table>
+                <div class="response-box" id="register-response"></div>
+            </form>
+        </div>
+        <div class="form-box" id="unsubscribe">
+            <form action="{%url 'scraper:unsubscribe' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="unsubscribe" />
+                <h3 class="form-title">Unsubsribe to stop receiving notifications </h3>
+                <table>
+                    <tr>
+                        <th colspan="2">Just type your email and hit the button!</th>
+                    </tr>
+                    <tr>
+                        <td><input type="email" class="input-field" name="email" placeholder="johnnythewolf@gmaul.com"
+                                required></td>
+                        <td><input type="submit" value="Bye!"></td>
+                    </tr>
+                </table>
+                <div class="response-box" id="unsubscribe-response"></div>
+            </form>
+        </div>
+        <div class="form-box" id="download">
+            {% csrf_token %}
+            <form action="{%url 'scraper:export' %}" method="post">
+                <input type="hidden" name="action" value="download" />
+                <h3 class="form-title"> Receive your Data Export </h3>
+                <table>
+                    <tr>
+                        <th colspan="2">Just type your email and hit the button!</th>
+                    </tr>
+                    <tr>
+                        <td><input type="email" name="email" class="input-field" placeholder="johnnythewolf@gmaul.com"
+                                required></td>
+                        <td><input type="submit" value="Request"></td>
+                    </tr>
+                </table>
+                <div class="response-box" id="export-response"></div>
+            </form>
+        </div>
+
+        <div class="gdpr-box" id="gdpr">
+            <h3>Privacy Policy</h3>
+
+
+            <p>
+                A short explanation on how we process the data you trusted us with, and how you can excercise your
+                rights
+                to controll your data.
+            </p>
+
+            <h4>What we save and where.</h4>
+            <p>
+                We will save your name and contact email in order to provide this service. Your Data is stored in a
+                UK based Datacenter under responsibility of codingcow.de.
+                Results are only stored temporarily (in RAM), in order to provide them to you.
+                As these results are basically a result of a web search, we will rather search again
+                than saving more data as needed. Whenever you receive a new result, you can choose to unsubscribe.
+                This will also delete all your results from our systems.
+            </p>
+
+            <h4>Will you give my information to 3rd parties?</h4>
+            <p>
+                Your name will only be provided to the company house, when doing the request. Your email will never be
+                shared and is only used to send you any
+                information we can find in the Companies House register and to send you your data export.
+                We will not user your data for any not mentioned purposes and won't provide or sell to any 3rd party not
+                mentioned on this page.
+            </p>
+            <h4>How to unsubscribe?</h4>
+            <p>
+                You can unsubscribe on the same page you subscribed to the service, by simply entering your email
+                address and click the "Bye!" button. Your data will be deleted as soon as you are
+                unsubscribed.
+            </p>
+            <h4>How to delete my data?</h4>
+            <p>
+                When you unsubscribe, your data will be deleted.
+            </p>
+
+
+            <h4>How to download my data?</h4>
+            <p>
+                You can request a complete set of all data we stored about you, from the landing page by clicking the
+                "Request" button in the data export form.
+            </p>
+            <h4> Where is your Cookie Banner? </h4>
+            <p>
+                No Cookies, no Banner. See your Browser settings, you won't find even a crumble.
+            </p>
+            <h4>How much will you charge me and when?</h4>
+            <p>
+                This service is free for everyone. If you feel bad about it, or you just want to buy us a coffee,
+                kindly klick the support us link above.
+            </p>
+            <h4>Further information:</h4>
+            <p>
+                This service is free of charge and comes with no warranty regarding accuracy.
+
+                For any further GDPR related inquiries contact dsgvo[at]codingcow.de
+            </p>
+        </div>
+        {% endblock  %} 

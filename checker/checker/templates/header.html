@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32 " href="{% static 'img/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+    <title>CHecker - We check the Companies House Register for you</title>
+    <meta name="description" content="... so you don't have to do it everyday.">
+
+</head>
+
+<body>
+    <div class="header">
+        <img id="logo" src="{% static 'img/favicon-32x32.png' %}" alt="CH" />
+        <h1>ecker :: Companies House Checker </h1>
+
+        <div id="donation">
+            <a href="https://www.paypal.com/donate/?hosted_button_id=XLWTBG49HW7XW"> If you want to support us, click
+                here.</a> <a id="close-donation" href="javascript:close_donation()"><b>x</b></a>
+        </div>
+    </div>
