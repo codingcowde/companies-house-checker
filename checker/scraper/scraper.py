@@ -1,9 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-
-
-### TODO refacture 
 ## replace + or " " with space before comparing with def filter_officers_by_exact_name(name)
 
 
@@ -91,6 +88,6 @@ class CHeckerScraper():
             result["text"] = profile.text.strip()
             result["link"] = self.fix_links(filtered)           
         else:
-            result = False             # change else to try except statement
+            result = False             
         return result
 
