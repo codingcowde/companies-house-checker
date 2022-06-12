@@ -60,15 +60,15 @@ def unsubscribe(request) -> HttpResponseRedirect:
         return HttpResponseRedirect('/#error')
     
     if subscriptions := Subscription.objects.filter(email = form.cleaned_data["email"]):
+        # get the data export before deleting the entries
+        file = create_data_export(subscriptions)
+
         for sub in subscriptions:
             sub.delete()   
         # Now we send the email confirming the deletion of all data
         # connected to the email.
         # We won't spam users with multiple entrys    
-        
         email = form.cleaned_data["email"]        
-        file = create_data_export(subscriptions)
-
         send_email(
                 'You are unsubscribed from CHecker - All data has been deleted',
                 'emails/unsubscribe.htm',
@@ -115,12 +115,6 @@ def run_scraper(request):
     """ should be called from chron tab or similar
         Runs the scraping job and triggers email notifications
         needs authentication
-
-    Args:
-        request (_type_): _description_
-
-    Returns:
-        HttpResponse: _description_
     """
     if not request.user.is_authenticated or request.method != 'POST':
         return HttpResponseRedirect('/#error')
@@ -137,10 +131,10 @@ def run_scraper(request):
             #  from legacy main.py in the template emails/notification.htm
             
             send_email(
-                subject = 'Your Report from CHecker',
-                template = 'emails/notification.htm',
-                to = user.email,
-                data = {
+                'Your Report from CHecker',
+                'emails/notification.htm',
+                user.email,
+                {
                 'result':result,
                 'user':user,
                 }
