@@ -4,11 +4,7 @@ from .models import Subscription, load_zero_flagged_from_database, load_flagged_
 from .forms import EmailForm, SubscribeForm
 from .scraper import CHeckerScraper 
 from .mail import send_email
-
-
 import time, random
-
-# Create your views here.
 
 def index(request):
     """ the sole interface of the app providing all 3 forms for more details,
@@ -36,9 +32,9 @@ def subscribe(request) -> HttpResponseRedirect:
         # Send the confirmation email        
         email=form.cleaned_data['email']        
         send_email(
-            subject ='Welcome to CHecker',
-            template = 'emails/subscribe.htm',
-            to = email,                
+            'Welcome to CHecker',
+            'emails/subscribe.htm',
+            email,                
             data = {
                 'request':request.POST,
                 }
@@ -107,37 +103,6 @@ def create_data_export(subscribed) -> bytes:
     return bytes(result,'utf-8')
 
  
-def run_scraper(request):
-    """ should be called from chron tab or similar
-        Runs the scraping job and triggers email notifications
-        needs authentication
-    """
-    if not request.user.is_authenticated or request.method != 'POST':
-        return HttpResponseRedirect('/#error')
-    flagged = load_flagged_from_database()
-    unflagged = load_zero_flagged_from_database()
 
-    for user in flagged:
-        user.flag -= 1
-        user.save()
-    CHS = CHeckerScraper()
-    for user in unflagged:
-        print(f"we have unflagged user: {user.name}")
-        if result := CHS.run(user.name):
-            ### implement the logic needed to build report
-            #  from legacy main.py in the template emails/notification.htm
-            print("found one")
-            send_email(
-                'Your Report from CHecker',
-                'emails/notification.htm',
-                user.email,
-                {
-                'result':result,
-                'user':user,
-                }
-            )
-            set_flag(user.name, user.email)
-            # SLEEP AFTER EVERY REQUEST TO AVOID SPAMMING THE SERVER    
-            seconds = random.randint(10, 60)                    
-            time.sleep(seconds)
-    return HttpResponse("Ran scrape job")
+ 
+1

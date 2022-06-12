@@ -12,7 +12,8 @@
             <h2> Your Report from CHecker </h2> 
             <p> Hi {{ user.name }},</p>
             <p> We found an entry that matches your details. Please check the details of the following company, likely to be registered in your name.</p>
-            <strong>{{ result.link | safe }}</strong>
+            <strong>Your Profile Link: {{ result.link | safe }}</strong>
+            <h2>Overview</h2>
             <p> {{ result.html | safe}}</p>
             <p> You can unsubscribe, by visiting this link: <a href='https://CHecker.codingcow.de'>Goto CHecker</a> </p>
         </content>

@@ -31,7 +31,7 @@ def load_flagged_from_database() -> list:
 def set_flag(name, email) -> None:
     """sets the flag to 10 meaning the user won't be notified for 10 cycles"""
     if result := Subscription.objects.filter(name = name, email = email )[:1][0]:
-        result.set(flag = 10)
+        result.flag = 10
         result.save()
     
 

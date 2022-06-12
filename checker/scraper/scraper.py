@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+
+
 class CHeckerScraper():
     def __init__(self) -> None:
         self.url = "https://find-and-update.company-information.service.gov.uk"
@@ -33,12 +35,9 @@ class CHeckerScraper():
             and returns the link to the first discovered Profile that 
             matches exact the name, as a BeautifulSoup Object
         """ 
-        name = self.prepare_name(name)
-                
-        for officer in officers:  
-            print(officer.find("a"))      
-            if link := officer.find("a", text=name):
-                print(link)
+        name = self.prepare_name(name)                
+        for officer in officers:              
+            if link := officer.find("a", text=name):            
                 return link
         # return false if nothing goes            
         return False        
@@ -87,4 +86,3 @@ class CHeckerScraper():
         else:
             result = False             
         return result
-
