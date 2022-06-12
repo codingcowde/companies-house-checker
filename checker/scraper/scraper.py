@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-
 class CHeckerScraper():
     def __init__(self) -> None:
         self.url = "https://find-and-update.company-information.service.gov.uk"
@@ -42,9 +41,7 @@ class CHeckerScraper():
                 print(link)
                 return link
         # return false if nothing goes            
-        return False
-
-        
+        return False        
 
     def get_profile_by_officer(self,profile_link) -> BeautifulSoup:
         """ get's the directors profile using the link obtained by 
@@ -75,7 +72,6 @@ class CHeckerScraper():
             link = a['href']
             a['href'] = self.url+link
         return html
-
 
     def run(self, name) -> dict:
         officers = self.search_officers_by_name(name)

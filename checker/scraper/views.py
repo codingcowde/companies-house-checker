@@ -1,8 +1,4 @@
-import email
-import re
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from django.template import loader
 from .models import Subscription, load_zero_flagged_from_database, load_flagged_from_database, set_flag
 from .forms import EmailForm, SubscribeForm
@@ -116,8 +112,8 @@ def run_scraper(request):
         Runs the scraping job and triggers email notifications
         needs authentication
     """
-   # if not request.user.is_authenticated or request.method != 'POST':
-   #     return HttpResponseRedirect('/#error')
+    if not request.user.is_authenticated or request.method != 'POST':
+        return HttpResponseRedirect('/#error')
     flagged = load_flagged_from_database()
     unflagged = load_zero_flagged_from_database()
 
