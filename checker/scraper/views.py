@@ -1,10 +1,9 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
-from .models import Subscription, load_zero_flagged_from_database, load_flagged_from_database, set_flag
+from .models import Subscription
 from .forms import EmailForm, SubscribeForm
-from .scraper import CHeckerScraper 
 from .mail import send_email
-import time, random
+
 
 def index(request):
     """ the sole interface of the app providing all 3 forms for more details,
