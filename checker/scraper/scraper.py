@@ -77,7 +77,7 @@ class CHeckerScraper():
         return html
 
 
-    def run(self, name) -> dict: 
+    def run(self, name) -> dict:
         officers = self.search_officers_by_name(name)
         result = {}        
         if filtered := self.filter_officers_by_exact_name(name, officers):            
@@ -85,11 +85,9 @@ class CHeckerScraper():
             profile = self.get_profile_by_officer(filtered)
             profile = profile.find_next("div", class_="appointments")     
             #fill the dict
-            result["html"] = f"{self.fix_links(profile)}"
-            
+            result["html"] = f"{self.fix_links(profile)}"            
             result["text"] = f"{profile.text.strip()}"
-            result["link"] = f"{self.fix_links(filtered)}"
-            
+            result["link"] = f"{self.fix_links(filtered)}"            
         else:
             result = False             
         return result
