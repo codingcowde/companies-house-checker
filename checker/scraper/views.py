@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.template import loader
 from .models import Subscription, load_zero_flagged_from_database, load_flagged_from_database, set_flag
 from .forms import EmailForm, SubscribeForm
-from .scraper import CHeckerScraper as CHS
+from .scraper import CHeckerScraper 
 from .mail import send_email
 
 
@@ -116,20 +116,21 @@ def run_scraper(request):
         Runs the scraping job and triggers email notifications
         needs authentication
     """
-    if not request.user.is_authenticated or request.method != 'POST':
-        return HttpResponseRedirect('/#error')
+   # if not request.user.is_authenticated or request.method != 'POST':
+   #     return HttpResponseRedirect('/#error')
     flagged = load_flagged_from_database()
     unflagged = load_zero_flagged_from_database()
 
     for user in flagged:
         user.flag -= 1
         user.save()
-
+    CHS = CHeckerScraper()
     for user in unflagged:
-       if result := CHS.run(user.name):
+        print(f"we have unflagged user: {user.name}")
+        if result := CHS.run(user.name):
             ### implement the logic needed to build report
             #  from legacy main.py in the template emails/notification.htm
-            
+            print("found one")
             send_email(
                 'Your Report from CHecker',
                 'emails/notification.htm',
@@ -143,4 +144,4 @@ def run_scraper(request):
             # SLEEP AFTER EVERY REQUEST TO AVOID SPAMMING THE SERVER    
             seconds = random.randint(10, 60)                    
             time.sleep(seconds)
-
+    return HttpResponse("Ran scrape job")

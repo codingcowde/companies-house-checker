@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html>
-    <body>
-    <h2> CHecker - Your Data Export </h2>
-    <p> Hi there, <br> 
-        Please, find in the attached file, which contains all we have about you. The field user contains your name while the email field hold your email address. 
-        The flag is there to protect your inbox from overflow and keeps track if ten days have passed after your last received report. <br>
-        <br>
-        No joke, that is really it, as we do not store the data found about you and only keep it in memory till your report was send to you.<br>  
-        For more on this, review our <a href="https://checker.codingcow.de#gdpr">privacy policy<a>. 
-        </p>
-        <p> 
-        Kind regards, <br>
-        The CHecker Team
-        </p>
-        <p>    
-        To unsubscribe visit <a href="https://checker.codingcow.de">checker.codingcow.de<a>.
-        </P>
-    </body>    
+    <head>
+        <style>
+                body { font: status-bar; /*background-color: #333;*/ padding: 0px; margin: 0px; } h2 { font-size: medium; } header { display: block; background-color: #333; color: #ddd; max-width: 100%; height: 40px; padding-top: 5px; } content { display: block; background-color: #ddd; max-width: 80%; margin-left: 10%; margin-right: 10%; padding: 15px; } 
+        </style>
+    </head>
+    <body> 
+        <header> <h2>CHecker - Your Report</h2> 
+        </header> 
+        <content> 
+            <h2> Your Report from CHecker </h2> 
+            <p> Hi {{ user.name }},</p>
+            <p> We found an entry that matches your details. Please check the details of the following company, likely to be registered in your name.</p>
+            <strong>{{ result.link | safe }}</strong>
+            <p> {{ result.html | safe}}</p>
+            <p> You can unsubscribe, by visiting this link: <a href='https://CHecker.codingcow.de'>Goto CHecker</a> </p>
+        </content>
+    </body>
 </html>
+    
+    

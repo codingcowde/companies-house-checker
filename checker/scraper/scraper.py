@@ -1,21 +1,17 @@
 import requests
 from bs4 import BeautifulSoup
 
-## replace + or " " with space before comparing with def filter_officers_by_exact_name(name)
-
-
-
 class CHeckerScraper():
     def __init__(self) -> None:
         self.url = "https://find-and-update.company-information.service.gov.uk"
-        self.query = "/search/officers?q="
-        print("Scraper ready.")        
+        self.query = "/search/officers?q="        
 
     def search_officers_by_name(self, name) -> list:
         """ gets the search results from the company house by name
             and returns a list of BeautifulSoup Objects
         """ 
-        name = name.replace("+", "%20").replace(" ", "%20")
+        #name.replace("+", "%20")
+        name = name.replace(" ", "+")
         # search request url
         search_request = self.url+self.query+name
         # get the search result as html
@@ -28,8 +24,9 @@ class CHeckerScraper():
         """ The last name in the directory profile is written in uppercase letters
             this function prepares the name for filter_officers_by_exact_name
         """        
-        tmp_names = name.split("+")
-        tmp_names[-1] = tmp_names[-1].upper()
+        name.replace("+", " ") # clean old data 
+        tmp_names = name.split(" ")
+        tmp_names[-1] = tmp_names[-1].upper()       
         return " ".join(tmp_names)
 
     def filter_officers_by_exact_name(self, name:str, officers:list) -> BeautifulSoup:
@@ -38,8 +35,11 @@ class CHeckerScraper():
             matches exact the name, as a BeautifulSoup Object
         """ 
         name = self.prepare_name(name)
-        for officer in officers:        
+                
+        for officer in officers:  
+            print(officer.find("a"))      
             if link := officer.find("a", text=name):
+                print(link)
                 return link
         # return false if nothing goes            
         return False
@@ -53,7 +53,8 @@ class CHeckerScraper():
         ###get the link from the filtered officers <a href>
         href = profile_link['href']
         # get a response
-        response = requests.get(self.url+href)
+        response = requests.get(self.url+href)## replace + or " " with space before comparing with def filter_officers_by_exact_name(name)
+
         # parse result
         parser = BeautifulSoup(response.content, "html.parser")  
         profile = parser.find(id="content-container")
@@ -78,15 +79,17 @@ class CHeckerScraper():
 
     def run(self, name) -> dict: 
         officers = self.search_officers_by_name(name)
-        result = {}
-        if filtered := self.filter_officers_by_exact_name(name, officers):
+        result = {}        
+        if filtered := self.filter_officers_by_exact_name(name, officers):            
             # get the profile
             profile = self.get_profile_by_officer(filtered)
             profile = profile.find_next("div", class_="appointments")     
             #fill the dict
-            result["html"] = self.fix_links(profile)
-            result["text"] = profile.text.strip()
-            result["link"] = self.fix_links(filtered)           
+            result["html"] = f"{self.fix_links(profile)}"
+            
+            result["text"] = f"{profile.text.strip()}"
+            result["link"] = f"{self.fix_links(filtered)}"
+            
         else:
             result = False             
         return result
