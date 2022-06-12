@@ -68,9 +68,9 @@
                 <div class="response-box" id="unsubscribe-response"></div>
             </form>
         </div>
-        <div class="form-box" id="download">
-            {% csrf_token %}
+        <div class="form-box" id="download">            
             <form action="{%url 'scraper:export' %}" method="post">
+                {% csrf_token %}
                 <input type="hidden" name="action" value="download" />
                 <h3 class="form-title"> Receive your Data Export </h3>
                 <table>

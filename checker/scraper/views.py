@@ -36,7 +36,7 @@ def subscribe(request) -> HttpResponseRedirect:
     if form.is_valid():
         subscription  = form.save()
         subscription.save()  
-        
+
         # Send the confirmation email        
         email=form.cleaned_data['email']        
         send_email(
@@ -67,10 +67,14 @@ def unsubscribe(request) -> HttpResponseRedirect:
         # We won't spam users with multiple entrys    
         
         email = form.cleaned_data["email"]        
+        file = create_data_export(subscriptions)
+
         send_email(
-                subject = 'You are unsubscribed from CHecker - All data has been deleted',
-                template = 'emails/unsubscribe.htm',
-                to = email,                
+                'You are unsubscribed from CHecker - All data has been deleted',
+                'emails/unsubscribe.htm',
+                email,   
+                {},
+                file
             )
     return HttpResponseRedirect('/#unsubscribe')
 
@@ -88,17 +92,23 @@ def request_data_export(request) -> HttpResponseRedirect:
     if subscribed := Subscription.objects.filter(email = email):
         # Now send email with all information found for the given email.
         # Again no spamming of users with multiple entrys       
-        
+
+        file = create_data_export(subscribed)
         send_email(
-            subject = 'Your Data Export From CHecker',
-            template = 'emails/export.htm',
-            to = email,
-            data = {
-            'result':subscribed,                
-            }
+            'Your Data Export From CHecker',
+            'emails/export.htm',
+            email,
+            {},
+            file
         )
     #send response
     return HttpResponseRedirect('/#download')
+
+def create_data_export(subscribed) -> bytes:
+    result = "uuid, name, email, flag \n"
+    for sub in subscribed:
+        result += f"{sub.id}, {sub.name}, {sub.email}, {sub.flag} \n"
+    return bytes(result,'utf-8')
 
  
 def run_scraper(request):
