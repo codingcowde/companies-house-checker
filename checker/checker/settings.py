@@ -9,8 +9,13 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+from dotenv import load_dotenv
 from pathlib import Path
+from os import getenv
+
+# load .env file
+load_dotenv()
+print(f'{getenv("HOST_NAME")}')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z&xt_48nfun^pw3$obp1194+5xdx%3e-6x!d@$by_rp9ffv5@#'
+SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -132,8 +137,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = "codingcow.de"
-EMAIL_USE_SSL = True
-EMAIL_PORT = 465
-EMAIL_HOST_USER= "" # store in environment variable and get with getenv()
-EMAIL_HOST_PASSWORD = ""  # store in environment variable and get with getenv()
+EMAIL_HOST = getenv("SMTP_SERVER")
+EMAIL_USE_SSL = getenv("SMTP_SSL")
+EMAIL_PORT = getenv("SMTP_PORT")
+EMAIL_HOST_USER= getenv("SMTP_USER") # store in environment variable and get with getenv()
+EMAIL_HOST_PASSWORD = getenv("SMTP_PW")  # store in environment variable and get with getenv()

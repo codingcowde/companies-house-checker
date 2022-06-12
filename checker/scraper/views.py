@@ -1,3 +1,5 @@
+import email
+import re
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -5,8 +7,9 @@ from django.template import loader
 from .models import Subscription, load_zero_flagged_from_database, load_flagged_from_database, set_flag
 from .forms import EmailForm, SubscribeForm
 from .scraper import CHeckerScraper as CHS
-from django.core.mail import send_email
-from django.conf.global_settings import EMAIL_HOST_USER
+from .mail import send_email
+
+
 import time, random
 
 # Create your views here.
@@ -26,20 +29,25 @@ def subscribe(request) -> HttpResponseRedirect:
         triggers an email confirmation on success 
         and redirects the user to /#register    
     """
-    form = SubscribeForm(request.POST or "")        
-    if request.method != 'POST' or not form.is_valid():           
-        return HttpResponseRedirect('/#error')            
+    form = SubscribeForm(request.POST or None)   
 
-    subscription  = form.save()
-    subscription.save()  
-    # Send the confirmation email
-    email_template = loader.get_template('emails/subscribe.htm').render({})
-    send_mail(
-        'Welcome to CHecker',
-        f'{email_template}',
-        form.cleaned_data['email']
-    )    
-    return HttpResponseRedirect('#register')
+    if request.method != 'POST' :           
+        return HttpResponseRedirect('/#error')            
+    if form.is_valid():
+        subscription  = form.save()
+        subscription.save()  
+        
+        # Send the confirmation email        
+        email=form.cleaned_data['email']        
+        send_email(
+            subject ='Welcome to CHecker',
+            template = 'emails/subscribe.htm',
+            to = email,                
+            data = {
+                'request':request.POST,
+                }
+        )
+    return HttpResponseRedirect('/#register')
  
 
 def unsubscribe(request) -> HttpResponseRedirect:
@@ -57,11 +65,13 @@ def unsubscribe(request) -> HttpResponseRedirect:
         # Now we send the email confirming the deletion of all data
         # connected to the email.
         # We won't spam users with multiple entrys    
-        email_template = loader.get_template('emails/unsubscribe.htm').render({})
-        send_mail(
-            'You are unsubscribed from CHecker - All data has been deleted',
-            f'{email_template}',
-             form.cleaned_data["email"])    
+        
+        email = form.cleaned_data["email"]        
+        send_email(
+                subject = 'You are unsubscribed from CHecker - All data has been deleted',
+                template = 'emails/unsubscribe.htm',
+                to = email,                
+            )
     return HttpResponseRedirect('/#unsubscribe')
 
 def request_data_export(request) -> HttpResponseRedirect:
@@ -77,13 +87,16 @@ def request_data_export(request) -> HttpResponseRedirect:
     # Get all data connected to the given email
     if subscribed := Subscription.objects.filter(email = email):
         # Now send email with all information found for the given email.
-        # Again no spamming of users with multiple entrys
-        email_template = loader.get_template('emails/export.htm').render({subscribed})        
-        send_mail(
-            'Your Data Export From CHecker',
-            f'{email_template}',
-            email
-            )
+        # Again no spamming of users with multiple entrys       
+        
+        send_email(
+            subject = 'Your Data Export From CHecker',
+            template = 'emails/export.htm',
+            to = email,
+            data = {
+            'result':subscribed,                
+            }
+        )
     #send response
     return HttpResponseRedirect('/#download')
 
@@ -112,19 +125,18 @@ def run_scraper(request):
        if result := CHS.run(user.name):
             ### implement the logic needed to build report
             #  from legacy main.py in the template emails/notification.htm
-            email_template = loader.get_template('emails/notification.htm').render({
+            
+            send_email(
+                subject = 'Your Report from CHecker',
+                template = 'emails/notification.htm',
+                to = user.email,
+                data = {
                 'result':result,
                 'user':user,
-                })                                    
-            send_mail(
-                'Your Report from CHecker',
-                f'{email_template}',
-                user.email
+                }
             )
             set_flag(user.name, user.email)
             # SLEEP AFTER EVERY REQUEST TO AVOID SPAMMING THE SERVER    
             seconds = random.randint(10, 60)                    
             time.sleep(seconds)
 
-def send_mail(subject, template, to):
-    send_email(subject,template, EMAIL_HOST_USER, [f'{to}'])

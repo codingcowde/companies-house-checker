@@ -7,7 +7,7 @@ import re
 class SubscribeForm(ModelForm):
     class Meta:
         model = Subscription
-        fields = ['action' 'name', 'email', 'flag']
+        fields = ['name', 'email']
     
     def clean(self):
         super(SubscribeForm, self).clean()
@@ -24,8 +24,7 @@ class SubscribeForm(ModelForm):
         else:
             #clean name from special chars to avoid xss 
             name = re.sub("[^\w\s!?]","", name)
-            self.cleaned_data['name'] = name
-            self.cleaned_data['flag'] = 0
+            self.cleaned_data['name'] = name        
 
         return self.cleaned_data
 

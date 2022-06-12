@@ -13,7 +13,7 @@ class Subscription(models.Model):
           )
     name = models.CharField(max_length=200)
     email = models.EmailField(max_length=250)
-    flag = models.IntegerField(0)
+    flag = models.IntegerField(default=0)
 
 ### test these functions to work with django db
 
@@ -30,7 +30,7 @@ def load_flagged_from_database() -> list:
 
 def set_flag(name, email) -> None:
     """sets the flag to 10 meaning the user won't be notified for 10 cycles"""
-    if result := Subscription.objects.filter(name = name, email = email )[:1][0]
+    if result := Subscription.objects.filter(name = name, email = email )[:1][0]:
         result.set(flag = 10)
         result.save()
     
