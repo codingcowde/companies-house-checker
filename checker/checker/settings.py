@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # scraper app
     'scraper',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +145,8 @@ EMAIL_USE_SSL = getenv("SMTP_SSL")
 EMAIL_PORT = getenv("SMTP_PORT")
 EMAIL_HOST_USER= getenv("SMTP_USER") # store in environment variable and get with getenv()
 EMAIL_HOST_PASSWORD = getenv("SMTP_PW")  # store in environment variable and get with getenv()
+
+# Chron Jobs
+CRONJOBS = [
+    ('0 22 * * *', 'checker.cron.run_scrape_job')
+]
