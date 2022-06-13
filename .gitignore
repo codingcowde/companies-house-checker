@@ -1,3 +1,6 @@
 checker/.env
 checker/db.sqlite3
 checker/Dockerfile
+checker/docker-compose.yml
+static/
+.gitignore
