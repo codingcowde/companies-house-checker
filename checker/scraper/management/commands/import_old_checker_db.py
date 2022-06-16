@@ -4,8 +4,16 @@ from scraper.models import Subscription
 import sqlite3 as db
 from sqlite3 import DatabaseError
 
-class Command(BaseCommand):
-    def import_db(self, db_file):
+class Command(BaseCommand):  
+       
+        
+    def handle(self, *args, **options):
+        """ 
+            imports from a legacy database
+            needas a filename as parameter"""
+        
+        db_file =args[0]                    
+        self.import_db(db_file)
         connection = None
         try:
             connection = db.connect(db_file)
@@ -17,6 +25,8 @@ class Command(BaseCommand):
                 name = data[0]
                 email = data[1]
                 flag = data[2]
+                if sub:= Subscription.objects.filter(name=name, email=email)[:1][0]:
+                    return
                 sub = Subscription.objects.create(name=name, email=email, flag=flag)
                 sub.save()
             print('All users migrated.')
@@ -31,14 +41,6 @@ class Command(BaseCommand):
                 connection.close()
                 print("Connection closed.")
     
-        
-    def handle(self, *args, **options):
-        """ 
-            imports from a legacy database
-            needas a filename as parameter"""
-        
-        db_file =args[0]                    
-        self.import_db(db_file)
         
                 
             
